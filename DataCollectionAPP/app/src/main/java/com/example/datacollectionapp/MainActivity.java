@@ -51,13 +51,15 @@ public class MainActivity extends AppCompatActivity {
 
     LocationCallback locationCallback;
 
+    DatabaseManager databaseManager;
+
 
     private SensorEventListener sensorEventListener = new SensorEventListener() {
 
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
 
-            DatabaseManager databaseManager = new DatabaseManager(MainActivity.this);
+            databaseManager = new DatabaseManager(MainActivity.this);
 
             float x = sensorEvent.values[0];
             float y = sensorEvent.values[1];
@@ -130,8 +132,19 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        btn_pothole.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                databaseManager.defineAnomalyType(accelData, "Pothole");
+                onResume();
+            }
+        });
+
+
 
     }
+
+
 
 
     protected void onResume() {
@@ -141,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 startLocationUpdate();
                 mSensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+
 
             }
         });
@@ -152,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
 
     }
 
@@ -165,11 +180,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void stopLocationUpdate() {
-        txt_lat.setText("Location tracking is off");
-        txt_lon.setText("Location tracking is off");
-        txt_accuracy.setText("Location tracking is off");
-        txt_alt.setText("Location tracking is off");
-        txt_speed.setText("Location tracking is off");
 
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
@@ -214,6 +224,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void updateLocationValuesUI(Location location){
+
+        accelData.setLat(location.getLatitude());
+        accelData.setLon(location.getLongitude());
+        accelData.setAlt(location.getAltitude());
+        accelData.setAccuracy(location.getAccuracy());
+        accelData.setSpeed(location.getSpeed());
+
         txt_lat.setText("Latitude: "+ String.valueOf(location.getLatitude()));
         txt_lon.setText("Longitude: "+String.valueOf(location.getLongitude()));
         txt_accuracy.setText("Accuracy: "+String.valueOf(location.getAccuracy()));

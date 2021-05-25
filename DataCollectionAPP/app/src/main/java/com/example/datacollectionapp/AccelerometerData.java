@@ -1,28 +1,15 @@
 package com.example.datacollectionapp;
 
 public class AccelerometerData {
-    private float x, y, z;
+    private float x, y, z, accuracy, speed;
+    double lat, lon, alt;
     private int id;
 
-    public AccelerometerData(float x, float y, float z, int id) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.id = id;
-    }
+
 
     public AccelerometerData() {
     }
 
-    @Override
-    public String toString() {
-        return "AccelerometerData{" +
-                "x=" + x +
-                ", y=" + y +
-                ", z=" + z +
-                ", id=" + id +
-                '}';
-    }
 
     public void setX(float x) {
         this.x = x;
@@ -34,6 +21,26 @@ public class AccelerometerData {
 
     public void setZ(float z) {
         this.z = z;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
+    }
+
+    public void setAlt(double alt) {
+        this.alt = alt;
+    }
+
+    public void setAccuracy(float accuracy) {
+        this.accuracy = accuracy;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
     }
 
     public void setId(int id) {
@@ -50,6 +57,26 @@ public class AccelerometerData {
 
     public float getZ() {
         return z;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public double getAlt() {
+        return alt;
+    }
+
+    public float getAccuracy() {
+        return accuracy;
+    }
+
+    public float getSpeed() {
+        return speed;
     }
 
     public int getId() {
