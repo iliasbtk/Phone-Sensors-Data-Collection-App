@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
 
+            DatabaseManager databaseManager = new DatabaseManager(MainActivity.this);
+
             float x = sensorEvent.values[0];
             float y = sensorEvent.values[1];
             float z = sensorEvent.values[2];
@@ -68,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
             txt_accel_x.setText(String.format("X: %s", accelData.getX()));
             txt_accel_y.setText(String.format("Y: %s", accelData.getY()));
             txt_accel_z.setText(String.format("Z: %s", accelData.getZ()));
+
+            databaseManager.addOne(accelData);
 
         }
 
