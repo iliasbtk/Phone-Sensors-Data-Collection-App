@@ -1,13 +1,13 @@
 package com.example.datacollectionapp;
 
-public class AccelerometerData {
+public class SensorsData {
     private float x, y, z, accuracy, speed;
     double lat, lon, alt;
     private int id;
 
 
 
-    public AccelerometerData() {
+    public SensorsData() {
     }
 
 

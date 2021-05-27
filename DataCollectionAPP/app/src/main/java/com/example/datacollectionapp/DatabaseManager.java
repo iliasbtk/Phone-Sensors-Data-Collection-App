@@ -46,21 +46,21 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     }
 
-    public void addOne(AccelerometerData accelData){
+    public void addOne(SensorsData sensorsData){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
-        cv.put(X_COLUMN, accelData.getX());
-        cv.put(Y_COLUMN, accelData.getY());
-        cv.put(Z_COLUMN, accelData.getZ());
-        cv.put(LAT_COLUMN, accelData.getLat());
-        cv.put(LON_COLUMN, accelData.getLon());
-        cv.put(ALT_COLUMN, accelData.getAlt());
-        cv.put(ACCURACY_COLUMN, accelData.getAccuracy());
-        cv.put(SPEED_COLUMN, accelData.getSpeed());
+        cv.put(X_COLUMN, sensorsData.getX());
+        cv.put(Y_COLUMN, sensorsData.getY());
+        cv.put(Z_COLUMN, sensorsData.getZ());
+        cv.put(LAT_COLUMN, sensorsData.getLat());
+        cv.put(LON_COLUMN, sensorsData.getLon());
+        cv.put(ALT_COLUMN, sensorsData.getAlt());
+        cv.put(ACCURACY_COLUMN, sensorsData.getAccuracy());
+        cv.put(SPEED_COLUMN, sensorsData.getSpeed());
         cv.put(ROAD_ANOMALY_COLUMN, "NONE");
         cv.put(DATE_TIME_COLUMN, formatter.format(date));
 
@@ -68,12 +68,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     }
 
-    public void defineAnomalyType(AccelerometerData accelData, String anomalyType){
+    public void defineAnomalyType(SensorsData sensorsData, String anomalyType){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(ROAD_ANOMALY_COLUMN, anomalyType);
 
-        db.update(TABLE_NAME, cv, LAT_COLUMN + " = " +accelData.getLat(),null);
+        db.update(TABLE_NAME, cv, LAT_COLUMN + " = " +sensorsData.getLat(),null);
 
     }
 

@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     Sensor mAccelerometer;
 
     //Define an instance of accelerometer data class
-    AccelerometerData accelData = new AccelerometerData();
+    SensorsData sensorsData = new SensorsData();
 
     //Config file for FusedLocationProviderClient
     LocationRequest locationRequest;
@@ -68,20 +68,20 @@ public class MainActivity extends AppCompatActivity {
             float y = sensorEvent.values[1];
             float z = sensorEvent.values[2];
 
-            accelData.setX(x);
-            accelData.setY(y);
-            accelData.setZ(z);
+            sensorsData.setX(x);
+            sensorsData.setY(y);
+            sensorsData.setZ(z);
 
-            txt_accel_x.setText(String.format("X: %s", accelData.getX()));
-            txt_accel_y.setText(String.format("Y: %s", accelData.getY()));
-            txt_accel_z.setText(String.format("Z: %s", accelData.getZ()));
+            txt_accel_x.setText(String.format("X: %s", sensorsData.getX()));
+            txt_accel_y.setText(String.format("Y: %s", sensorsData.getY()));
+            txt_accel_z.setText(String.format("Z: %s", sensorsData.getZ()));
 
             Date date = new Date();
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             System.out.println(formatter.format(date));
 
 
-            databaseManager.addOne(accelData);
+            databaseManager.addOne(sensorsData);
 
         }
 
@@ -143,40 +143,40 @@ public class MainActivity extends AppCompatActivity {
         btn_pothole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                databaseManager.defineAnomalyType(accelData, "Pothole");
+                databaseManager.defineAnomalyType(sensorsData, "Pothole");
                 onResume();
             }
         });
         btn_pothole_deep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                databaseManager.defineAnomalyType(accelData, "Deep Pothole");
+                databaseManager.defineAnomalyType(sensorsData, "Deep Pothole");
                 onResume();
             }
         });
         btn_turn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                databaseManager.defineAnomalyType(accelData, "Turn");
+                databaseManager.defineAnomalyType(sensorsData, "Turn");
                 onResume();
             }
         });
         btn_sb_low.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                databaseManager.defineAnomalyType(accelData,"Low Speed Bump");
+                databaseManager.defineAnomalyType(sensorsData,"Low Speed Bump");
             }
         });
         btn_sb_medium.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                databaseManager.defineAnomalyType(accelData,"Medium Speed Bump");
+                databaseManager.defineAnomalyType(sensorsData,"Medium Speed Bump");
             }
         });
         btn_sb_high.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                databaseManager.defineAnomalyType(accelData,"High Speed Bump");
+                databaseManager.defineAnomalyType(sensorsData,"High Speed Bump");
             }
         });
 
@@ -267,21 +267,21 @@ public class MainActivity extends AppCompatActivity {
     }
     public void updateLocationValuesUI(Location location){
 
-        accelData.setLat(location.getLatitude());
-        accelData.setLon(location.getLongitude());
-        accelData.setAlt(location.getAltitude());
-        accelData.setAccuracy(location.getAccuracy());
-        accelData.setSpeed(location.getSpeed());
+        sensorsData.setLat(location.getLatitude());
+        sensorsData.setLon(location.getLongitude());
+        sensorsData.setAlt(location.getAltitude());
+        sensorsData.setAccuracy(location.getAccuracy());
+        sensorsData.setSpeed(location.getSpeed());
 
         txt_lat.setText("Latitude: "+ String.valueOf(location.getLatitude()));
         txt_lon.setText("Longitude: "+String.valueOf(location.getLongitude()));
         txt_accuracy.setText("Accuracy: "+String.valueOf(location.getAccuracy()));
 
-        /*if(location.hasAltitude()){
+        if(location.hasAltitude()){
             txt_alt.setText("Altitude: "+String.valueOf(location.getAltitude()));
         }else{
             txt_alt.setText("Altitude not available");
-        }*/
+        }
 
         if(location.hasSpeed()){
             txt_speed.setText("Speed: "+String.valueOf(location.getSpeed()));
