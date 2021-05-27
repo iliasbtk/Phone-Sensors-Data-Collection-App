@@ -139,6 +139,40 @@ public class MainActivity extends AppCompatActivity {
                 onResume();
             }
         });
+        btn_pothole_deep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                databaseManager.defineAnomalyType(accelData, "Deep Pothole");
+                onResume();
+            }
+        });
+        btn_turn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                databaseManager.defineAnomalyType(accelData, "Turn");
+                onResume();
+            }
+        });
+        btn_sb_low.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                databaseManager.defineAnomalyType(accelData,"Low Speed Bump");
+            }
+        });
+        btn_sb_medium.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                databaseManager.defineAnomalyType(accelData,"Medium Speed Bump");
+            }
+        });
+        btn_sb_high.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                databaseManager.defineAnomalyType(accelData,"High Speed Bump");
+            }
+        });
+
+
 
 
 
