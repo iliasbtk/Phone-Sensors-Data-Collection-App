@@ -25,6 +25,9 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity {
     // How often the location check occur (Seconds)
     public static final int UPDATE_INTERVAL = 5;
@@ -72,6 +75,11 @@ public class MainActivity extends AppCompatActivity {
             txt_accel_x.setText(String.format("X: %s", accelData.getX()));
             txt_accel_y.setText(String.format("Y: %s", accelData.getY()));
             txt_accel_z.setText(String.format("Z: %s", accelData.getZ()));
+
+            Date date = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            System.out.println(formatter.format(date));
+
 
             databaseManager.addOne(accelData);
 
@@ -269,11 +277,12 @@ public class MainActivity extends AppCompatActivity {
         txt_lon.setText("Longitude: "+String.valueOf(location.getLongitude()));
         txt_accuracy.setText("Accuracy: "+String.valueOf(location.getAccuracy()));
 
-        if(location.hasAltitude()){
+        /*if(location.hasAltitude()){
             txt_alt.setText("Altitude: "+String.valueOf(location.getAltitude()));
         }else{
             txt_alt.setText("Altitude not available");
-        }
+        }*/
+
         if(location.hasSpeed()){
             txt_speed.setText("Speed: "+String.valueOf(location.getSpeed()));
         }else{

@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 public class DatabaseManager extends SQLiteOpenHelper {
 
@@ -21,6 +24,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String ACCURACY_COLUMN = "Accuracy";
     public static final String SPEED_COLUMN = "Speed";
     public  static final String ROAD_ANOMALY_COLUMN = "Road_Anomaly_type";
+    public static final String DATE_TIME_COLUMN = "Date";
 
     public DatabaseManager(@Nullable Context context) {
         super(context, "sensors.db", null, 1);
@@ -31,7 +35,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         String createTableQuery = "CREATE TABLE " + TABLE_NAME + " (" + ID_COLUMN + " INTEGER PRIMAR" + Y_COLUMN +
                 " KEY AUTOINCREMENT, "+ X_COLUMN + " REAL, " + Y_COLUMN + " REAL, " + Z_COLUMN +
                 " REAL, " + LAT_COLUMN + " REAL, "+ LON_COLUMN + " REAL, "+ ALT_COLUMN + " REAL, " +
-                ACCURACY_COLUMN + " REAL, "+ SPEED_COLUMN + " REAL, " + ROAD_ANOMALY_COLUMN + " TEXT(25))";
+                ACCURACY_COLUMN + " REAL, "+ SPEED_COLUMN + " REAL, " + ROAD_ANOMALY_COLUMN +
+                " TEXT(25), " + DATE_TIME_COLUMN + " TEXT(25))";
 
         db.execSQL(createTableQuery);
     }
@@ -45,6 +50,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
         cv.put(X_COLUMN, accelData.getX());
         cv.put(Y_COLUMN, accelData.getY());
         cv.put(Z_COLUMN, accelData.getZ());
@@ -54,6 +62,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         cv.put(ACCURACY_COLUMN, accelData.getAccuracy());
         cv.put(SPEED_COLUMN, accelData.getSpeed());
         cv.put(ROAD_ANOMALY_COLUMN, "NONE");
+        cv.put(DATE_TIME_COLUMN, formatter.format(date));
+
         db.insert(TABLE_NAME, null, cv);
 
     }
