@@ -30,7 +30,7 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     // How often the location check occur (Seconds)
-    public static final int UPDATE_INTERVAL = 5;
+    public static final int UPDATE_INTERVAL = 1;
     // How often the location check occur when maximum power is used (Seconds)
     public static final int UPDATE_FASTEST_INTERVAL = 1;
 
@@ -144,21 +144,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 databaseManager.defineAnomalyType(sensorsData, "Pothole");
-                onResume();
             }
         });
         btn_pothole_deep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 databaseManager.defineAnomalyType(sensorsData, "Deep Pothole");
-                onResume();
             }
         });
         btn_turn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 databaseManager.defineAnomalyType(sensorsData, "Turn");
-                onResume();
+
             }
         });
         btn_sb_low.setOnClickListener(new View.OnClickListener() {

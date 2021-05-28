@@ -73,7 +73,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(ROAD_ANOMALY_COLUMN, anomalyType);
 
-        db.update(TABLE_NAME, cv, LAT_COLUMN + " = " +sensorsData.getLat(),null);
+        db.update(TABLE_NAME, cv, LAT_COLUMN + " = " + sensorsData.getLat() + " AND " +
+                LON_COLUMN + " = " + sensorsData.getLon() + " AND " + ALT_COLUMN + " = " +
+                sensorsData.getAlt() ,null);
 
     }
 
