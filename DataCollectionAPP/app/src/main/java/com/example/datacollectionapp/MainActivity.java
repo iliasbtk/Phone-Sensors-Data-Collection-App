@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int PERMISSION_FINE_LOCATION = 99;
 
-    Button btn_start, btn_stop, btn_sb_low, btn_sb_medium, btn_sb_high, btn_pothole, btn_pothole_deep, btn_turn;
+    Button btn_start, btn_stop, btn_speed_bump, btn_pothole, btn_turn;
     TextView txt_accel_x, txt_accel_y, txt_accel_z, txt_lat, txt_lon, txt_alt, txt_accuracy, txt_speed;
 
     //Define sensor manager and accelerometer
@@ -101,11 +101,8 @@ public class MainActivity extends AppCompatActivity {
         btn_start = findViewById(R.id.btn_start);
         btn_stop = findViewById(R.id.btn_stop);
 
-        btn_sb_low = findViewById(R.id.btn_sb_low);
-        btn_sb_medium = findViewById(R.id.btn_sb_medium);
-        btn_sb_high = findViewById(R.id.btn_sb_high);
+        btn_speed_bump = findViewById(R.id.btn_speed_bump);
         btn_pothole = findViewById(R.id.btn_pothole);
-        btn_pothole_deep = findViewById(R.id.btn_pothole_deep);
         btn_turn = findViewById(R.id.btn_turn);
 
         txt_accel_x = findViewById(R.id.txt_accel_x);
@@ -127,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         locationRequest = new LocationRequest();
         locationRequest.setInterval(1000 * UPDATE_INTERVAL);
         locationRequest.setFastestInterval(1000 * UPDATE_FASTEST_INTERVAL);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
         updateGPS();
 
@@ -146,12 +143,6 @@ public class MainActivity extends AppCompatActivity {
                 databaseManager.defineAnomalyType(sensorsData, "Pothole");
             }
         });
-        btn_pothole_deep.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                databaseManager.defineAnomalyType(sensorsData, "Deep Pothole");
-            }
-        });
         btn_turn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -159,22 +150,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        btn_sb_low.setOnClickListener(new View.OnClickListener() {
+        btn_speed_bump.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                databaseManager.defineAnomalyType(sensorsData,"Low Speed Bump");
-            }
-        });
-        btn_sb_medium.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                databaseManager.defineAnomalyType(sensorsData,"Medium Speed Bump");
-            }
-        });
-        btn_sb_high.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                databaseManager.defineAnomalyType(sensorsData,"High Speed Bump");
+                databaseManager.defineAnomalyType(sensorsData,"Speed Bump");
             }
         });
 
