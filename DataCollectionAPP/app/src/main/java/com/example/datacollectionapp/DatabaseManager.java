@@ -23,6 +23,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String ALT_COLUMN = "Altitude";
     public static final String ACCURACY_COLUMN = "Accuracy";
     public static final String SPEED_COLUMN = "Speed";
+    public static final String BEARING_COLUMN = "Bearing";
     public  static final String ROAD_ANOMALY_COLUMN = "Road_Anomaly_type";
     public static final String DATE_TIME_COLUMN = "Date";
 
@@ -35,7 +36,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         String createTableQuery = "CREATE TABLE " + TABLE_NAME + " (" + ID_COLUMN + " INTEGER PRIMAR" + Y_COLUMN +
                 " KEY AUTOINCREMENT, "+ X_COLUMN + " REAL, " + Y_COLUMN + " REAL, " + Z_COLUMN +
                 " REAL, " + LAT_COLUMN + " REAL, "+ LON_COLUMN + " REAL, "+ ALT_COLUMN + " REAL, " +
-                ACCURACY_COLUMN + " REAL, "+ SPEED_COLUMN + " REAL, " + ROAD_ANOMALY_COLUMN +
+                ACCURACY_COLUMN + " REAL, "+ SPEED_COLUMN + " REAL, " +BEARING_COLUMN+ " REAL, " + ROAD_ANOMALY_COLUMN +
                 " TEXT(25), " + DATE_TIME_COLUMN + " TEXT(25))";
 
         db.execSQL(createTableQuery);
@@ -61,6 +62,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         cv.put(ALT_COLUMN, sensorsData.getAlt());
         cv.put(ACCURACY_COLUMN, sensorsData.getAccuracy());
         cv.put(SPEED_COLUMN, sensorsData.getSpeed());
+        cv.put(BEARING_COLUMN, sensorsData.getBearing());
         cv.put(ROAD_ANOMALY_COLUMN, "NONE");
         cv.put(DATE_TIME_COLUMN, formatter.format(date));
 
@@ -71,11 +73,23 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public void defineAnomalyType(SensorsData sensorsData, String anomalyType){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(ROAD_ANOMALY_COLUMN, anomalyType);
 
-        db.update(TABLE_NAME, cv, LAT_COLUMN + " = " + sensorsData.getLat() + " AND " +
-                LON_COLUMN + " = " + sensorsData.getLon() + " AND " + ALT_COLUMN + " = " +
-                sensorsData.getAlt() ,null);
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+        cv.put(X_COLUMN, sensorsData.getX());
+        cv.put(Y_COLUMN, sensorsData.getY());
+        cv.put(Z_COLUMN, sensorsData.getZ());
+        cv.put(LAT_COLUMN, sensorsData.getLat());
+        cv.put(LON_COLUMN, sensorsData.getLon());
+        cv.put(ALT_COLUMN, sensorsData.getAlt());
+        cv.put(ACCURACY_COLUMN, sensorsData.getAccuracy());
+        cv.put(SPEED_COLUMN, sensorsData.getSpeed());
+        cv.put(BEARING_COLUMN, sensorsData.getBearing());
+        cv.put(ROAD_ANOMALY_COLUMN, anomalyType);
+        cv.put(DATE_TIME_COLUMN, formatter.format(date));
+
+        db.insert(TABLE_NAME, null, cv);
 
     }
 

@@ -41,17 +41,7 @@
         app:layout_constraintTop_toBottomOf="@+id/btn_start"
         app:layout_constraintWidth_percent="0.45" />
 
-    <Button
-        android:id="@+id/btn_turn"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:text="Turn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.22"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_speed_bump"
-        app:layout_constraintWidth_percent="0.45" />
+
 
     <TextView
         android:id="@+id/textView1"
@@ -63,7 +53,7 @@
         android:textStyle="bold"
         app:layout_constraintHeight_percent="0.04"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_turn" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_speed_bump" />
 
     <TextView
         android:id="@+id/txt_accel_x"
@@ -151,6 +141,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_accuracy" />
 
+    <TextView
+        android:id="@+id/txt_bearing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bearing: "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_speed" />
+
     <Button
         android:id="@+id/btn_stop"
         android:layout_width="wrap_content"
@@ -161,136 +159,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
 
-    <!--
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="Start"
-            android:id="@+id/btn_start"
-            android:background="#2E8B57"
-            />
 
-        <GridLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/layout_buttons"
-            android:layout_below="@+id/btn_start"
-            android:columnCount="3"
-            android:rowCount="2"
-            >
-
-            <Button
-                android:gravity="fill"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                />
-            <Button
-                android:gravity="fill"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                />
-            <Button
-                android:gravity="fill"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                />
-            <Button
-                android:gravity="fill"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                />
-            <Button
-                android:gravity="fill"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                />
-            <Button
-                android:gravity="fill"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                />
-        </GridLayout>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Accelerometer Data"
-            android:layout_below="@+id/layout_buttons"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:id="@+id/txt_accel_data"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="X: "
-            android:layout_below="@+id/txt_accel_data"
-            android:id="@+id/txt_accel_x"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Y: "
-            android:layout_below="@+id/txt_accel_x"
-            android:id="@+id/txt_accel_y"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Z: "
-            android:layout_below="@+id/txt_accel_y"
-            android:id="@+id/txt_accel_z"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="GPS Data"
-            android:layout_below="@+id/txt_accel_z"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:id="@+id/txt_gps_data"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Latitude: "
-            android:layout_below="@+id/txt_gps_data"
-            android:id="@+id/txt_lat"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Longitude:"
-            android:layout_below="@+id/txt_lat"
-            android:id="@+id/txt_lon"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Altitude: "
-            android:layout_below="@+id/txt_lon"
-            android:id="@+id/txt_altitude"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Accuracy: "
-            android:layout_below="@+id/txt_altitude"
-            android:id="@+id/txt_accuracy"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Speed: "
-            android:layout_below="@+id/txt_accuracy"
-            android:id="@+id/txt_speed"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="STOP"
-            android:id="@+id/btn_stop"
-            android:background="#2E8B57"
-            android:layout_below="@+id/txt_speed"
-            />
-    -->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

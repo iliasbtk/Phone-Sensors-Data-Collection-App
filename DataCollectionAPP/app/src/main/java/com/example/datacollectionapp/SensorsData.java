@@ -1,7 +1,7 @@
 package com.example.datacollectionapp;
 
 public class SensorsData {
-    private float x, y, z, accuracy, speed;
+    private float x, y, z, accuracy, speed, bearing;
     double lat, lon, alt;
     private int id;
 
@@ -81,5 +81,13 @@ public class SensorsData {
 
     public int getId() {
         return id;
+    }
+
+    public float getBearing() {
+        return bearing;
+    }
+
+    public void setBearing(float bearing) {
+        this.bearing = bearing;
     }
 }
