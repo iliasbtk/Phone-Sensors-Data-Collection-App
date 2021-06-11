@@ -1,11 +1,6 @@
 package com.example.datacollectionapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -18,15 +13,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
 
+
+
             x = sensorEvent.values[0];
             y = sensorEvent.values[1];
             z = sensorEvent.values[2];
@@ -74,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
             txt_accel_x.setText(String.format("X: %s", x));
             txt_accel_y.setText(String.format("Y: %s", y));
             txt_accel_z.setText(String.format("Z: %s", z));
+
+
 
             databaseManager.addOne(storeSensorsData());
 
@@ -250,7 +250,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public SensorsData storeSensorsData() {
+
         SensorsData sensorsData = new SensorsData();
+
         sensorsData.setX(x);
         sensorsData.setY(y);
         sensorsData.setZ(z);
