@@ -26,7 +26,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    // How often the location check occur (Seconds)
+    // How often the location check occur (Milliseconds)
     public static final int UPDATE_INTERVAL = 1;
     // How often the location check occur when maximum power is used (Seconds)
     public static final int UPDATE_FASTEST_INTERVAL = 1;
@@ -35,11 +35,12 @@ public class MainActivity extends AppCompatActivity {
 
     Button btn_start, btn_stop, btn_speed_bump, btn_pothole;
     TextView txt_accel_x, txt_accel_y, txt_accel_z, txt_lat, txt_lon, txt_alt, txt_accuracy,
-            txt_speed, txt_bearing;
+            txt_speed, txt_bearing, txt_gyro_x, txt_gyro_y, txt_gyro_z;
 
     //Define sensor manager and accelerometer
     SensorManager mSensorManager;
     Sensor mAccelerometer;
+    Sensor mGyroScope;
 
     //Config file for FusedLocationProviderClient
     LocationRequest locationRequest;
@@ -54,29 +55,42 @@ public class MainActivity extends AppCompatActivity {
     float speed, accuracy, bearing;
 
     //Variables to store accelerometer data
-    float x, y, z;
+    float accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z;
 
     DatabaseManager databaseManager =new DatabaseManager(MainActivity.this);
 
-    private SensorEventListener sensorEventListener = new SensorEventListener() {
+    private SensorEventListener sensorEventListenerAcc = new SensorEventListener() {
 
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
 
+            accel_x = sensorEvent.values[0];
+            accel_y = sensorEvent.values[1];
+            accel_z = sensorEvent.values[2];
 
-
-            x = sensorEvent.values[0];
-            y = sensorEvent.values[1];
-            z = sensorEvent.values[2];
-
-            txt_accel_x.setText(String.format("X: %s", x));
-            txt_accel_y.setText(String.format("Y: %s", y));
-            txt_accel_z.setText(String.format("Z: %s", z));
-
-
+            txt_accel_x.setText(String.format("X: %s", accel_x));
+            txt_accel_y.setText(String.format("Y: %s", accel_y));
+            txt_accel_z.setText(String.format("Z: %s", accel_z));
 
             databaseManager.addOne(storeSensorsData());
+        }
 
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int i) {
+
+        }
+    };
+
+    private SensorEventListener sensorEventListenerGyro = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent sensorEvent) {
+            gyro_x = sensorEvent.values[0];
+            gyro_y = sensorEvent.values[1];
+            gyro_z = sensorEvent.values[2];
+
+            txt_gyro_x.setText(String.format("X: %s", gyro_x));
+            txt_gyro_y.setText(String.format("Y: %s", gyro_y));
+            txt_gyro_z.setText(String.format("Z: %s", gyro_z));
         }
 
         @Override
@@ -108,13 +122,24 @@ public class MainActivity extends AppCompatActivity {
         txt_speed = findViewById(R.id.txt_speed);
         txt_bearing = findViewById(R.id.txt_bearing);
 
+        txt_gyro_x = findViewById(R.id.txt_gyro_x);
+        txt_gyro_y = findViewById(R.id.txt_gyro_y);
+        txt_gyro_z = findViewById(R.id.txt_gyro_z);
+
         // Initialize sensor manager and accelerometer
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mGyroScope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+
+        if(mGyroScope == null){
+            txt_gyro_x.setText("Gyroscope not available");
+            txt_gyro_y.setText("Gyroscope not available");
+            txt_gyro_z.setText("Gyroscope not available");
+        }
 
         // Set LocationRequest's properties
         locationRequest = new LocationRequest();
-        locationRequest.setInterval(1000 * UPDATE_INTERVAL);
+        locationRequest.setInterval(10 * UPDATE_INTERVAL);
         locationRequest.setFastestInterval(1000 * UPDATE_FASTEST_INTERVAL);
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
@@ -152,15 +177,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startLocationUpdate();
-                mSensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-
+                mSensorManager.registerListener(sensorEventListenerAcc, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+                mSensorManager.registerListener(sensorEventListenerGyro, mGyroScope, SensorManager.SENSOR_DELAY_NORMAL);
 
             }
         });
         btn_stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mSensorManager.unregisterListener(sensorEventListener);
+                mSensorManager.unregisterListener(sensorEventListenerAcc);
+                mSensorManager.unregisterListener(sensorEventListenerGyro);
                 stopLocationUpdate();
 
             }
@@ -186,7 +212,8 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onPause() {
         super.onPause();
-        mSensorManager.unregisterListener(sensorEventListener);
+        mSensorManager.unregisterListener(sensorEventListenerAcc);
+        mSensorManager.unregisterListener(sensorEventListenerGyro);
     }
 
     @Override
@@ -253,9 +280,12 @@ public class MainActivity extends AppCompatActivity {
 
         SensorsData sensorsData = new SensorsData();
 
-        sensorsData.setX(x);
-        sensorsData.setY(y);
-        sensorsData.setZ(z);
+        sensorsData.setAccel_x(accel_x);
+        sensorsData.setAccel_y(accel_y);
+        sensorsData.setAccel_z(accel_z);
+        sensorsData.setGyro_x(gyro_x);
+        sensorsData.setGyro_y(gyro_y);
+        sensorsData.setGyro_z(gyro_z);
         sensorsData.setLat(latitude);
         sensorsData.setLon(longitude);
         sensorsData.setAlt(altitude);

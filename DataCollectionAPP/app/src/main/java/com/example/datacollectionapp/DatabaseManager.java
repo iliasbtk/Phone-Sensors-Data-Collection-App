@@ -14,9 +14,12 @@ import java.util.Date;
 public class DatabaseManager extends SQLiteOpenHelper {
 
     public final static String TABLE_NAME = "Sensor_Data_Table";
-    public static final String X_COLUMN = "X";
-    public static final String Y_COLUMN = "Y";
-    public static final String Z_COLUMN = "Z";
+    public static final String ACC_X_COLUMN = "ACC_X";
+    public static final String ACC_Y_COLUMN = "ACC_Y";
+    public static final String ACC_Z_COLUMN = "ACC_Z";
+    public static final String GYRO_X_COLUMN = "GYRO_X";
+    public static final String GYRO_Y_COLUMN = "GYRO_Y";
+    public static final String GYRO_Z_COLUMN = "GYRO_Z";
     public static final String ID_COLUMN = "ID";
     public static final String LAT_COLUMN = "Latitude";
     public static final String LON_COLUMN = "Longitude";
@@ -33,11 +36,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableQuery = "CREATE TABLE " + TABLE_NAME + " (" + ID_COLUMN + " INTEGER PRIMAR" + Y_COLUMN +
-                " KEY AUTOINCREMENT, "+ X_COLUMN + " REAL, " + Y_COLUMN + " REAL, " + Z_COLUMN +
-                " REAL, " + LAT_COLUMN + " REAL, "+ LON_COLUMN + " REAL, "+ ALT_COLUMN + " REAL, " +
-                ACCURACY_COLUMN + " REAL, "+ SPEED_COLUMN + " REAL, " +BEARING_COLUMN+ " REAL, " + ROAD_ANOMALY_COLUMN +
-                " TEXT(25), " + DATE_TIME_COLUMN + " TEXT(25))";
+        String createTableQuery = "CREATE TABLE " + TABLE_NAME + " (" + ID_COLUMN
+                + " INTEGER PRIMARY KEY AUTOINCREMENT, " + ACC_X_COLUMN + " REAL, " + ACC_Y_COLUMN
+                + " REAL, " + ACC_Z_COLUMN + " REAL, " + GYRO_X_COLUMN + " REAL, " + GYRO_Y_COLUMN
+                + " REAL, " + GYRO_Z_COLUMN+ " REAL, " +LAT_COLUMN + " REAL, "+ LON_COLUMN + " REAL, "
+                + ALT_COLUMN + " REAL, " + ACCURACY_COLUMN + " REAL, "+ SPEED_COLUMN + " REAL, "
+                +BEARING_COLUMN+ " REAL, " + ROAD_ANOMALY_COLUMN + " TEXT(25), " + DATE_TIME_COLUMN
+                + " TEXT(25))";
 
         db.execSQL(createTableQuery);
     }
@@ -54,9 +59,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
-        cv.put(X_COLUMN, sensorsData.getX());
-        cv.put(Y_COLUMN, sensorsData.getY());
-        cv.put(Z_COLUMN, sensorsData.getZ());
+        cv.put(ACC_X_COLUMN, sensorsData.getAccel_x());
+        cv.put(ACC_Y_COLUMN, sensorsData.getAccel_y());
+        cv.put(ACC_Z_COLUMN, sensorsData.getAccel_z());
+        cv.put(GYRO_X_COLUMN, sensorsData.getGyro_x());
+        cv.put(GYRO_Y_COLUMN, sensorsData.getGyro_y());
+        cv.put(GYRO_Z_COLUMN, sensorsData.getGyro_z());
         cv.put(LAT_COLUMN, sensorsData.getLat());
         cv.put(LON_COLUMN, sensorsData.getLon());
         cv.put(ALT_COLUMN, sensorsData.getAlt());
@@ -77,9 +85,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
-        cv.put(X_COLUMN, sensorsData.getX());
-        cv.put(Y_COLUMN, sensorsData.getY());
-        cv.put(Z_COLUMN, sensorsData.getZ());
+        cv.put(ACC_X_COLUMN, sensorsData.getAccel_x());
+        cv.put(ACC_Y_COLUMN, sensorsData.getAccel_y());
+        cv.put(ACC_Z_COLUMN, sensorsData.getAccel_z());
+        cv.put(GYRO_X_COLUMN, sensorsData.getGyro_x());
+        cv.put(GYRO_Y_COLUMN, sensorsData.getGyro_y());
+        cv.put(GYRO_Z_COLUMN, sensorsData.getGyro_z());
         cv.put(LAT_COLUMN, sensorsData.getLat());
         cv.put(LON_COLUMN, sensorsData.getLon());
         cv.put(ALT_COLUMN, sensorsData.getAlt());
