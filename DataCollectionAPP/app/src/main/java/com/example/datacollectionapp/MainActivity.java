@@ -24,16 +24,17 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity {
 
     // How often the location check occur (Milliseconds)
     public static final int UPDATE_INTERVAL = 1;
-    // How often the location check occur when maximum power is used (Seconds)
-    public static final int UPDATE_FASTEST_INTERVAL = 1;
 
     private static final int PERMISSION_FINE_LOCATION = 99;
 
-    Button btn_start, btn_stop, btn_speed_bump, btn_pothole;
+    Button btn_start, btn_stop, btn_speed_bump;
     TextView txt_accel_x, txt_accel_y, txt_accel_z, txt_lat, txt_lon, txt_alt, txt_accuracy,
             txt_speed, txt_bearing, txt_gyro_x, txt_gyro_y, txt_gyro_z;
 
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     DatabaseManager databaseManager =new DatabaseManager(MainActivity.this);
 
+    //Accelerometer sensor changes listener
     private SensorEventListener sensorEventListenerAcc = new SensorEventListener() {
 
         @Override
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
             txt_accel_y.setText(String.format("Y: %s", accel_y));
             txt_accel_z.setText(String.format("Z: %s", accel_z));
 
+            //Add an entry to the database
             databaseManager.addOne(storeSensorsData());
         }
 
@@ -81,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    //Gyroscope sensor changes listener
     private SensorEventListener sensorEventListenerGyro = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
@@ -109,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
         btn_stop = findViewById(R.id.btn_stop);
 
         btn_speed_bump = findViewById(R.id.btn_speed_bump);
-        btn_pothole = findViewById(R.id.btn_pothole);
 
         txt_accel_x = findViewById(R.id.txt_accel_x);
         txt_accel_y = findViewById(R.id.txt_accel_y);
@@ -131,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mGyroScope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 
+        //Check if the phone has a gyroscope
         if(mGyroScope == null){
             txt_gyro_x.setText("Gyroscope not available");
             txt_gyro_y.setText("Gyroscope not available");
@@ -140,9 +144,9 @@ public class MainActivity extends AppCompatActivity {
         // Set LocationRequest's properties
         locationRequest = new LocationRequest();
         locationRequest.setInterval(10 * UPDATE_INTERVAL);
-        locationRequest.setFastestInterval(1000 * UPDATE_FASTEST_INTERVAL);
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
+        //Start tracking GPS Location
         updateGPS();
 
         // Event triggered when the update interval is met
@@ -154,13 +158,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        btn_pothole.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                databaseManager.defineAnomalyType(storeSensorsData(), "Pothole");
-            }
-        });
-
+        //Button to capture the presence of a speed bump
         btn_speed_bump.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -279,6 +277,8 @@ public class MainActivity extends AppCompatActivity {
     public SensorsData storeSensorsData() {
 
         SensorsData sensorsData = new SensorsData();
+
+
 
         sensorsData.setAccel_x(accel_x);
         sensorsData.setAccel_y(accel_y);
