@@ -112,7 +112,4 @@ public class SensorsData {
         return id;
     }
 
-
-
-
 }

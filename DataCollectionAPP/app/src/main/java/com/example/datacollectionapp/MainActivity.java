@@ -1,12 +1,22 @@
 package com.example.datacollectionapp;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+
 import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+
 import android.location.Location;
+
+import com.google.android.gms.location.LocationServices;
+
+
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -17,11 +27,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
+
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
+
 import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
+
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.text.SimpleDateFormat;
@@ -39,9 +49,9 @@ public class MainActivity extends AppCompatActivity {
             txt_speed, txt_bearing, txt_gyro_x, txt_gyro_y, txt_gyro_z;
 
     //Define sensor manager and accelerometer
-    SensorManager mSensorManager;
-    Sensor mAccelerometer;
-    Sensor mGyroScope;
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private Sensor mGyroScope;
 
     //Config file for FusedLocationProviderClient
     LocationRequest locationRequest;
@@ -58,50 +68,13 @@ public class MainActivity extends AppCompatActivity {
     //Variables to store accelerometer data
     float accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z;
 
-    DatabaseManager databaseManager =new DatabaseManager(MainActivity.this);
+    DatabaseManager databaseManager = new DatabaseManager(MainActivity.this);
 
     //Accelerometer sensor changes listener
-    private SensorEventListener sensorEventListenerAcc = new SensorEventListener() {
-
-        @Override
-        public void onSensorChanged(SensorEvent sensorEvent) {
-
-            accel_x = sensorEvent.values[0];
-            accel_y = sensorEvent.values[1];
-            accel_z = sensorEvent.values[2];
-
-            txt_accel_x.setText(String.format("X: %s", accel_x));
-            txt_accel_y.setText(String.format("Y: %s", accel_y));
-            txt_accel_z.setText(String.format("Z: %s", accel_z));
-
-            //Add an entry to the database
-            databaseManager.addOne(storeSensorsData());
-        }
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int i) {
-
-        }
-    };
+    private SensorEventListener sensorEventListenerAcc;
 
     //Gyroscope sensor changes listener
-    private SensorEventListener sensorEventListenerGyro = new SensorEventListener() {
-        @Override
-        public void onSensorChanged(SensorEvent sensorEvent) {
-            gyro_x = sensorEvent.values[0];
-            gyro_y = sensorEvent.values[1];
-            gyro_z = sensorEvent.values[2];
-
-            txt_gyro_x.setText(String.format("X: %s", gyro_x));
-            txt_gyro_y.setText(String.format("Y: %s", gyro_y));
-            txt_gyro_z.setText(String.format("Z: %s", gyro_z));
-        }
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int i) {
-
-        }
-    };
+    private SensorEventListener sensorEventListenerGyro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,8 +107,52 @@ public class MainActivity extends AppCompatActivity {
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mGyroScope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 
+
+        sensorEventListenerAcc = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+
+                //Get accelerometer sensor values from sensorEvent
+                accel_x = sensorEvent.values[0];
+                accel_y = sensorEvent.values[1];
+                accel_z = sensorEvent.values[2];
+
+                //Display accelerometer sensor values by updating the textViews in the Main Activity.
+                txt_accel_x.setText(String.format("X: %s", accel_x));
+                txt_accel_y.setText(String.format("Y: %s", accel_y));
+                txt_accel_z.setText(String.format("Z: %s", accel_z));
+
+                //Add an entry to the database
+                databaseManager.addDataEntry(storeSensorsData());
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int i) {
+            }
+        };
+
+        sensorEventListenerGyro = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+
+                //Collect gyroscope sensor values from sensorEvent
+                gyro_x = sensorEvent.values[0];
+                gyro_y = sensorEvent.values[1];
+                gyro_z = sensorEvent.values[2];
+
+                //Display gyroscope sensor values by updating the textViews in the Main Activity.
+                txt_gyro_x.setText(String.format("X: %s", gyro_x));
+                txt_gyro_y.setText(String.format("Y: %s", gyro_y));
+                txt_gyro_z.setText(String.format("Z: %s", gyro_z));
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int i) {
+            }
+        };
+
         //Check if the phone has a gyroscope
-        if(mGyroScope == null){
+        if (mGyroScope == null) {
             txt_gyro_x.setText("Gyroscope not available");
             txt_gyro_y.setText("Gyroscope not available");
             txt_gyro_z.setText("Gyroscope not available");
@@ -154,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
-                updateLocationValuesUI(locationResult.getLastLocation());
+                updateLocationValues(locationResult.getLastLocation());
             }
         };
 
@@ -162,51 +179,59 @@ public class MainActivity extends AppCompatActivity {
         btn_speed_bump.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                databaseManager.defineAnomalyType(storeSensorsData(), "Speed Bump");
+                databaseManager.addAnomalyEntry(storeSensorsData());
             }
         });
 
+        //Start data collection
+        btn_start.setOnClickListener(view -> {
+            startLocationUpdate();
+            mSensorManager.registerListener(sensorEventListenerAcc, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+            mSensorManager.registerListener(sensorEventListenerGyro, mGyroScope, SensorManager.SENSOR_DELAY_NORMAL);
 
-    }
-
-    protected void onResume() {
-        super.onResume();
-        btn_start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startLocationUpdate();
-                mSensorManager.registerListener(sensorEventListenerAcc, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-                mSensorManager.registerListener(sensorEventListenerGyro, mGyroScope, SensorManager.SENSOR_DELAY_NORMAL);
-
-            }
         });
+
+        //Stop data collection
         btn_stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mSensorManager.unregisterListener(sensorEventListenerAcc);
                 mSensorManager.unregisterListener(sensorEventListenerGyro);
+                txt_accel_x.setText("x:");
+                txt_accel_y.setText("y:");
+                txt_accel_z.setText("z:");
+                txt_gyro_x.setText("x:");
+                txt_gyro_y.setText("y:");
+                txt_gyro_z.setText("z:");
                 stopLocationUpdate();
-
             }
         });
 
+    }
 
+    protected void onResume() {
+        super.onResume();
     }
 
     private void startLocationUpdate() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
             updateGPS();
             return;
         }
-
     }
 
+    @SuppressLint("SetTextI18n")
     private void stopLocationUpdate() {
-
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        txt_lat.setText("Not tracking location");
+        txt_lon.setText("Not tracking location");
+        txt_alt.setText("Not tracking location");
+        txt_accuracy.setText("Not tracking location");
+        txt_speed.setText("Not tracking location");
+        txt_bearing.setText("Not tracking location");
     }
-
 
     protected void onPause() {
         super.onPause();
@@ -228,23 +253,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateGPS() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    updateLocationValuesUI(location);
-                }
-            });
-
+        fusedLocationProviderClient = LocationServices
+                .getFusedLocationProviderClient(MainActivity.this);
+        //Check if the permission is granted
+        if (ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            //Get last known location
+            fusedLocationProviderClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            updateLocationValues(location);
+                        }
+                    });
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_FINE_LOCATION);
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}
+                        , PERMISSION_FINE_LOCATION);
             }
         }
     }
 
-    public void updateLocationValuesUI(Location location) {
+    public void updateLocationValues(Location location) {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         altitude = location.getAltitude();
@@ -267,9 +297,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             txt_speed.setText("Speed not available");
         }
-        if (location.hasBearing()){
-            txt_bearing.setText("Bearing: "+ String.valueOf(location.getBearing()));
-        }else{
+        if (location.hasBearing()) {
+            txt_bearing.setText("Bearing: " + String.valueOf(location.getBearing()));
+        } else {
             txt_bearing.setText("Bearing not available");
         }
     }
@@ -277,8 +307,6 @@ public class MainActivity extends AppCompatActivity {
     public SensorsData storeSensorsData() {
 
         SensorsData sensorsData = new SensorsData();
-
-
 
         sensorsData.setAccel_x(accel_x);
         sensorsData.setAccel_y(accel_y);
@@ -294,5 +322,4 @@ public class MainActivity extends AppCompatActivity {
         sensorsData.setBearing(bearing);
         return sensorsData;
     }
-
 }

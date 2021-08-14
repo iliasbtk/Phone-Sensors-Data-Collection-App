@@ -52,7 +52,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     }
 
-    public void addOne(SensorsData sensorsData){
+    public void addDataEntry(SensorsData sensorsData){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -78,7 +78,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     }
 
-    public void defineAnomalyType(SensorsData sensorsData, String anomalyType){
+    public void addAnomalyEntry(SensorsData sensorsData){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -97,7 +97,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         cv.put(ACCURACY_COLUMN, sensorsData.getAccuracy());
         cv.put(SPEED_COLUMN, sensorsData.getSpeed());
         cv.put(BEARING_COLUMN, sensorsData.getBearing());
-        cv.put(ROAD_ANOMALY_COLUMN, anomalyType);
+        cv.put(ROAD_ANOMALY_COLUMN, "Speed Bump");
         cv.put(DATE_TIME_COLUMN, formatter.format(date));
 
         db.insert(TABLE_NAME, null, cv);
